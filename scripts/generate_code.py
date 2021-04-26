@@ -55,12 +55,3 @@ with ZipFile(jar_file) as zf:
                 fw.write("{} = autoclass('{}')\n".format(classname[25:], classname))
 
 fw.close()
-#print(jarfile)
-#print(base_dir)
-#java_sdk_dir
-#
-#if [ ! -f ${JAR} ]; then
-#    echo "No such file: ${JAR}"
-#    exit
-#fi
-

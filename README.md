@@ -13,10 +13,13 @@ prikey = PrivateKey.generate()
 print("Private key: {}".format(prikey.toString()))
 print("Public key: {}".format(prikey.getPublicKey().toString()))
 ```
+You must make sure JAVA_HOME is set to a JRE/JDK that's >=11. Do a `echo $JAVA_HOME` on Linux/MacOS or `echo %JAVA_HOME%` on Windows to confirm.
 
-see [examples](examples) for more example usages.
+see [examples](https://github.com/wensheng/hedera-sdk-py/tree/main/examples) for more example usages.
 
 ## How to Build
+(Ignore this section unless you want to contribute or make custom SDK)
+
 Hedera-sdk-py requires JDK >=11, either OpenJDK or Oracle JDK.
 
 Clone this repo:
@@ -54,3 +57,12 @@ Build package:
 
     rm -fr build dist
     python -m build
+
+Test package (preferably inside a virtual env or pipenv):
+
+    pip uninstall hedera-sdk-py
+    pip install dist/hedera_sdk_py-(current_version)-py3-none-any.whl
+
+Upload to Pypi (don't do this unless you're me):
+
+    python -m twine upload dist/*
