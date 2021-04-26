@@ -1,0 +1,4 @@
+[submodule "hedera-sdk-java"]
+	path = hedera-sdk-java
+	url = https://github.com/hashgraph/hedera-sdk-java.git
+	branch = master
