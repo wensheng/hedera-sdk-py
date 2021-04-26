@@ -1,0 +1,90 @@
+diff --git a/build.gradle b/build.gradle
+index 81cb33388..c935a41e8 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -12,8 +12,8 @@ allprojects {
+ 	apply plugin: "java"
+ 	apply plugin: "net.ltgt.errorprone"
+ 
+-	sourceCompatibility = 14
+-	targetCompatibility = 14
++	sourceCompatibility = 11
++	targetCompatibility = 11
+ 
+ 	repositories {
+ 		mavenCentral()
+diff --git a/examples/build.gradle b/examples/build.gradle
+index f54d35cfa..480ff6c80 100644
+--- a/examples/build.gradle
++++ b/examples/build.gradle
+@@ -10,8 +10,8 @@ dependencies {
+ }
+ 
+ java {
+-	sourceCompatibility = org.gradle.api.JavaVersion.VERSION_1_8
+-	targetCompatibility = org.gradle.api.JavaVersion.VERSION_1_8
++	sourceCompatibility = org.gradle.api.JavaVersion.VERSION_11
++	targetCompatibility = org.gradle.api.JavaVersion.VERSION_11
+ }
+ 
+ tasks.addRule("Pattern: run<Example>: Runs an example.") { String taskName ->
+diff --git a/executable-annotation/build.gradle b/executable-annotation/build.gradle
+index b253af69b..8c86b867a 100644
+--- a/executable-annotation/build.gradle
++++ b/executable-annotation/build.gradle
+@@ -1,2 +1,2 @@
+-sourceCompatibility = 8
+-targetCompatibility = 8
++sourceCompatibility = 11
++targetCompatibility = 11
+diff --git a/executable-processor/src/main/java/com/hedera/hashgraph/sdk/FunctionalExecutableProcessor.java b/executable-processor/src/main/java/com/hedera/hashgraph/sdk/FunctionalExecutableProcessor.java
+index 79dc358ab..56b84dd02 100644
+--- a/executable-processor/src/main/java/com/hedera/hashgraph/sdk/FunctionalExecutableProcessor.java
++++ b/executable-processor/src/main/java/com/hedera/hashgraph/sdk/FunctionalExecutableProcessor.java
+@@ -29,7 +29,7 @@ import static com.squareup.javapoet.TypeSpec.interfaceBuilder;
+ 
+ @SuppressWarnings({"AndroidJdkLibsChecker", "Java7ApiChecker"})
+ @SupportedAnnotationTypes("com.hedera.hashgraph.sdk.FunctionalExecutable")
+-@SupportedSourceVersion(SourceVersion.RELEASE_8)
++@SupportedSourceVersion(SourceVersion.RELEASE_11)
+ public class FunctionalExecutableProcessor extends AbstractProcessor {
+     @Override
+     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+diff --git a/sdk/build.gradle b/sdk/build.gradle
+index db9b13516..a3c22dc9c 100644
+--- a/sdk/build.gradle
++++ b/sdk/build.gradle
+@@ -41,6 +41,7 @@ dependencies {
+ 	implementation "io.grpc:grpc-api:1.35.0"
+ 	implementation "io.grpc:grpc-protobuf-lite:1.35.0"
+ 	implementation "io.grpc:grpc-stub:1.35.0"
++	implementation "javax.annotation:javax.annotation-api:1.3.2"
+ 
+ 	testImplementation "org.junit.jupiter:junit-jupiter-engine:5.6.1"
+ 	testImplementation "org.junit.jupiter:junit-jupiter-params:5.6.1"
+@@ -97,7 +98,7 @@ tasks.withType(JavaCompile).configureEach {
+ 	compileJava {
+ 		options.compilerArgs += [
+ 			"--release",
+-			"8" // Avoid using Java 12 APIs
++			"11" // Avoid using Java 12 APIs
+ 		]
+ 	}
+ }
+@@ -221,3 +222,16 @@ nexus {
+ 	sign = true
+ 	repositoryUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+ }
++
++task uberJar(type: Jar) {
++    archiveClassifier = 'uber'
++    from sourceSets.main.output
++    dependsOn configurations.runtimeClasspath
++    from {
++        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
++    }{
++        exclude 'META-INF/*.SF'
++        exclude 'META-INF/*.DSA'
++        exclude 'META-INF/*.RSA'
++    }
++}
