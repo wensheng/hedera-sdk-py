@@ -18,7 +18,7 @@ You must make sure JAVA_HOME is set to a JRE/JDK that's >=11. Do a `echo $JAVA_H
 see [examples](https://github.com/wensheng/hedera-sdk-py/tree/main/examples) for more example usages.
 
 ## How to Build
-(Ignore this section unless you want to contribute or make custom SDK)
+(**Ignore this section unless you want to contribute or make custom SDK**)
 
 Hedera-sdk-py requires JDK >=11, either OpenJDK or Oracle JDK.
 

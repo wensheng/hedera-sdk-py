@@ -1,14 +1,20 @@
 import os
+import sys
 from hedera import (
-    Hbar,
     AccountId,
     PrivateKey,
     Client,
-    FileCreateTransaction,
+    FileId,
+    FileDeleteTransaction,
     )
 
 assert "OPERATOR_ID" in os.environ
 assert "OPERATOR_KEY" in os.environ
+
+if len(sys.argv) < 2:
+    exit("need a file id")
+
+fileId = FileId.fromString(sys.argv[1])
 
 OPERATOR_ID = AccountId.fromString(os.environ["OPERATOR_ID"])
 OPERATOR_KEY = PrivateKey.fromString(os.environ["OPERATOR_KEY"])
@@ -24,10 +30,7 @@ else:
 
 client.setOperator(OPERATOR_ID, OPERATOR_KEY)
 
-fileContents = "Hedera hashgraph SDK in python is great! 好 👍"
-
-tran = FileCreateTransaction()
-resp = tran.setKeys(OPERATOR_KEY.getPublicKey()).setContents(fileContents).setMaxTransactionFee(Hbar(2)).execute(client)
+tran = FileDeleteTransaction()
+resp = tran.setFileId(fileId).execute(client)
 receipt = resp.getReceipt(client)
-fileId = receipt.fileId
-print("file: ",  fileId.toString())
+print("file deleted successfully")
