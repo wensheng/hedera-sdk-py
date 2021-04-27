@@ -1,7 +1,7 @@
 # hedera-sdk-py
-Hedera SDK in Python
+[Hedera](https://hedera.com/) SDK in Python
 
-This is basically a python wrapper of Hedera SDK in Java.
+This is basically a python wrapper of [Hedera SDK in Java](https://github.com/hashgraph/hedera-sdk-java).
 
 ## Install
     pip install hedera-sdk-py
