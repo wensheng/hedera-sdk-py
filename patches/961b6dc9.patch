@@ -90,3 +90,18 @@ index db9b13516..ade2ea14c 100644
 +        exclude 'META-INF/*.RSA'
 +    }
 +}
+diff --git a/sdk/src/main/java/com/hedera/hashgraph/sdk/TopicMessageQuery.java b/sdk/src/main/java/com/hedera/hashgraph/sdk/TopicMessageQuery.java
+index 170d6769d..3d5535e45 100644
+--- a/sdk/src/main/java/com/hedera/hashgraph/sdk/TopicMessageQuery.java
++++ b/sdk/src/main/java/com/hedera/hashgraph/sdk/TopicMessageQuery.java
+@@ -10,8 +10,8 @@ import io.grpc.Status;
+ import io.grpc.StatusRuntimeException;
+ import io.grpc.stub.ClientCalls;
+ import io.grpc.stub.StreamObserver;
+-import java8.util.function.BiConsumer;
+-import java8.util.function.Consumer;
++import java.util.function.BiConsumer;
++import java.util.function.Consumer;
+ import org.threeten.bp.Instant;
+ 
+ import javax.annotation.Nullable;

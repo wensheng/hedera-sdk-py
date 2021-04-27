@@ -34,8 +34,10 @@ fw = open(os.path.join(base_dir, "src", "hedera", "generated.py"), 'w')
 fw.write("""import os
 here = os.path.abspath(os.path.dirname(__file__))
 os.environ['CLASSPATH'] = os.path.join(here, "%s")
-from jnius import autoclass
+from jnius import autoclass, PythonJavaClass, java_method
 
+JString = autoclass("java.lang.String")
+JStandardCharsets = autoclass("java.nio.charset.StandardCharsets")
 
 """ % jar_name)
 
@@ -54,4 +56,14 @@ with ZipFile(jar_file) as zf:
             if 'abstract class' not in output[1].decode() and not '$' in classname:
                 fw.write("{} = autoclass('{}')\n".format(classname[25:], classname))
 
+fw.write("""
+
+class PyConsumer(PythonJavaClass):
+    __javainterfaces__ = ['java/util/function/Consumer']
+
+    @java_method('(Ljava/lang/Object;)V')
+    def accept(self, msg):
+        contents = JString(msg.contents, JStandardCharsets.UTF_8)
+        print(msg.consensusTimestamp.toString(), " received topic message: ", contents.toString())
+""")
 fw.close()
