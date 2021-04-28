@@ -4,7 +4,9 @@
 This is basically a python wrapper of [Hedera SDK in Java](https://github.com/hashgraph/hedera-sdk-java).
 
 ## Install
-    pip install hedera-sdk-py
+~~pip install hedera-sdk-py~~ this will work later, for now:
+
+    pip install https://github.com/wensheng/hedera-sdk-py/releases/download/v2.0.5-beta.9/hedera_sdk_py-2.0.5b9-py3-none-any.whl
 
 ## How to Use
 ```python
@@ -15,7 +17,11 @@ print("Public key: {}".format(prikey.getPublicKey().toString()))
 ```
 You must make sure JAVA_HOME is set to a JRE/JDK that's >=11. Do a `echo $JAVA_HOME` on Linux/MacOS or `echo %JAVA_HOME%` on Windows to confirm.
 
+On Windows, if you get "no jvm dll found" error, you need to add %JAVA_HOME%/bin/server (i.e. C:\Program Files\Java\jdk-11.0.10\bin\server) to your path.
+
 see [examples](https://github.com/wensheng/hedera-sdk-py/tree/main/examples) for more example usages.
+
+For most examples, you need to set `OPERATOR_ID` AND `OPERATOR_KEY` environment variables.
 
 ## How to Build
 (**Ignore this section unless you want to contribute or make custom SDK**)
