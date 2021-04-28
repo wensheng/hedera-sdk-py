@@ -3,12 +3,14 @@
 import os
 import sys
 import shutil
-from subprocess import Popen, PIPE
 from zipfile import ZipFile
-from tqdm import tqdm
+# from subprocess import Popen, PIPE
+# from tqdm import tqdm
 
-if not shutil.which("javap"):
-    exit("This script relies on `javap` but it's not found")
+# no longer need to javap since we bring all abstract classes and interfaces out
+#   as they have public static methods
+# if not shutil.which("javap"):
+#     exit("This script relies on `javap` but it's not found")
 
 base_dir = os.path.realpath(os.path.join(os.path.dirname(__file__), ".."))
 java_sdk_dir = os.path.join(base_dir, "hedera-sdk-java")
@@ -48,14 +50,15 @@ with ZipFile(jar_file) as zf:
                 not "-" in a and
                 not "hashgraph/sdk/proto" in a]
 
-    for i in tqdm(namelist):
+    # for i in tqdm(namelist):
+    for i in namelist:
         classname = i[:-6].replace("/",".")
-        # print("javap -classpath {} -public {}".format(jar_file, classname))
-        with Popen(["javap", "-classpath", jar_file, "-public", classname], stdout=PIPE) as proc:
-            output = proc.stdout.readlines()
-            # if 'abstract class' not in output[1].decode() and not '$' in classname:
-            if not '$' in classname:
-                fw.write("{} = autoclass('{}')\n".format(classname[25:], classname))
+        # with Popen(["javap", "-classpath", jar_file, "-public", classname], stdout=PIPE) as proc:
+        #    output = proc.stdout.readlines()
+        #    if 'abstract class' not in output[1].decode() and not '$' in classname:
+        #        fw.write("{} = autoclass('{}')\n".format(classname[25:], classname))
+        if not '$' in classname:
+            fw.write("{} = autoclass('{}')\n".format(classname[25:], classname))
 
 fw.write("""
 
