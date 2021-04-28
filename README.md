@@ -37,7 +37,7 @@ To insure patching success, check out the commit whose hash match the patch file
     cd ..
     patch -p 1 -d hedera-sdk-java < patches/961b6dc9.patch
 
-As of now (2021/4), the difference is very minimal, no java source code is changed, only build.gradle's are modified to ensure jar packaging. But in the future, java source code might be modified to provide convience for interacting with SDK in Python.
+As of now (2021/4), the difference is very minimal, almost no java source code is changed, only build.gradle's are modified to ensure jar packaging. But in the future, java source code might be modified to provide convience for interacting with SDK in Python.
 
 You can revert the patches:
 

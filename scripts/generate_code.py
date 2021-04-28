@@ -53,7 +53,8 @@ with ZipFile(jar_file) as zf:
         # print("javap -classpath {} -public {}".format(jar_file, classname))
         with Popen(["javap", "-classpath", jar_file, "-public", classname], stdout=PIPE) as proc:
             output = proc.stdout.readlines()
-            if 'abstract class' not in output[1].decode() and not '$' in classname:
+            # if 'abstract class' not in output[1].decode() and not '$' in classname:
+            if not '$' in classname:
                 fw.write("{} = autoclass('{}')\n".format(classname[25:], classname))
 
 fw.write("""
@@ -61,9 +62,14 @@ fw.write("""
 class PyConsumer(PythonJavaClass):
     __javainterfaces__ = ['java/util/function/Consumer']
 
+    def __init__(self, fn):
+        self.fn = fn
+
     @java_method('(Ljava/lang/Object;)V')
     def accept(self, msg):
-        contents = JString(msg.contents, JStandardCharsets.UTF_8)
-        print(msg.consensusTimestamp.toString(), " received topic message: ", contents.toString())
+        ts = msg.consensusTimestamp.toString()
+        sn = msg.sequenceNumber
+        contents = JString(msg.contents, JStandardCharsets.UTF_8).toString()
+        self.fn(ts, sn, contents)
 """)
 fw.close()
