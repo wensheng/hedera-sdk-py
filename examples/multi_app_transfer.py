@@ -7,7 +7,7 @@ from hedera import (
     Transaction,
     )
 from get_client import client
-# from jnius import cast
+from jnius import cast
 
 
 exchangeKey = PrivateKey.generate()
@@ -48,13 +48,11 @@ signedTxnBytes = Transaction.fromBytes(transferTxn.toBytes()).sign(exchangeKey).
 # parse the transaction bytes returned from the exchange
 signedTransferTxn = Transaction.fromBytes(signedTxnBytes)
 
-# Could not get this to work
 # get the amount we are about to transfer
 # we built this with +2, -2
-# transferAmount = ((TransferTransaction)signedTransferTxn).getHbarTransfers().values().toArray(new Hbar[0])[0];
-# realTransferTxn = cast(TransferTransaction, signedTransferTxn)
-# transferAmount = realTransferTxn.getHbarTransfers().values().toArray(Hbar[0])[0]
-# print("about to transfer ", transferAmount, "...")
+realTransferTxn = cast(TransferTransaction, signedTransferTxn)
+transferAmount = realTransferTxn.getHbarTransfers().values().toArray()[0].toString()
+print("about to transfer ", transferAmount, "...")
 
 # we now execute the signed transaction and wait for it to be accepted
 transactionResponse = signedTransferTxn.execute(client)

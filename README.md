@@ -19,7 +19,7 @@ You must make sure JAVA_HOME is set to a JRE/JDK that's >=11. Do a `echo $JAVA_H
 
 On Windows, if you get "no jvm dll found" error, you need to add %JAVA_HOME%/bin/server (i.e. C:\Program Files\Java\jdk-11.0.10\bin\server) to your path.
 
-see [examples](https://github.com/wensheng/hedera-sdk-py/tree/main/examples) for more example usages.
+See [examples](https://github.com/wensheng/hedera-sdk-py/tree/main/examples) for more example usages.
 
 For most examples, you need to set `OPERATOR_ID` AND `OPERATOR_KEY` environment variables.
 
@@ -55,7 +55,7 @@ Build the Jar (make sure JAVA_HOME set to a JDK that's >=11):
     cd hedera-sdk-java
     ./gradlew uberJar
 
-Generate code (make sure tqdm is installed):
+Generate code:
 
     python scripts/generate_code.py
 
