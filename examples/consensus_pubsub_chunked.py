@@ -26,13 +26,11 @@ time.sleep(10)
 
 query = TopicMessageQuery().setTopicId(newTopicId)
 
-# if I print anything, sometimes it core-dumps, so do nothing for now
-# probably jnius bug
-def nothing(*args):
-    pass
+def show_msg(*args):
+    print("time:", args[0], "seq#:", args[1], "content:", args[2])
 
 
-query.subscribe(client, PyConsumer(nothing))
+query.subscribe(client, PyConsumer(show_msg))
 
 cur_dir = os.path.abspath(os.path.dirname(__file__))
 fr = open(os.path.join(cur_dir, "large_message.txt"))
@@ -69,5 +67,5 @@ transaction.sign(submitKey)
 transaction.execute(client).getReceipt(client)
 
 for i in count():
-    print("waiting ...")
+    print("waiting ..., if message is received, press ctrl-c to exit")
     time.sleep(2.5)

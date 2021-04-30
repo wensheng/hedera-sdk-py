@@ -4,9 +4,9 @@
 This is basically a python wrapper of [Hedera SDK in Java](https://github.com/hashgraph/hedera-sdk-java).
 
 ## Install
-~~pip install hedera-sdk-py~~ this will work later, for now:
 
-    pip install https://github.com/wensheng/hedera-sdk-py/releases/download/v2.0.5-beta.9/hedera_sdk_py-2.0.5b9-py3-none-any.whl
+    pip install hedera-sdk-py
+
 
 ## How to Use
 ```python
@@ -34,14 +34,14 @@ Clone this repo:
 
 Patch Java code:
 
-    patch -p 1 -d hedera-sdk-java < patches/961b6dc9.patch
+    patch -p 1 -d hedera-sdk-java < patches/4d880b4c.patch
 
 To insure patching success, check out the commit whose hash match the patch filename.  For example:
 
     cd hedera-sdk-java
-    git checkout 961b6dc9
+    git checkout 4d880b4c
     cd ..
-    patch -p 1 -d hedera-sdk-java < patches/961b6dc9.patch
+    patch -p 1 -d hedera-sdk-java < patches/4d880b4c.patch
 
 As of now (2021/4), the difference is very minimal, almost no java source code is changed, only build.gradle's are modified to ensure jar packaging. But in the future, java source code might be modified to provide convience for interacting with SDK in Python.
 
