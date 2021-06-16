@@ -36,12 +36,12 @@ Patch Java code:
 
     patch -p 1 -d hedera-sdk-java < patches/4d880b4c.patch
 
-To insure patching success, check out the commit whose hash match the patch filename.  For example:
+To insure patching success, check out the java sdk version tag, then apply the patch that matches the tag.  For example:
 
     cd hedera-sdk-java
-    git checkout 4d880b4c
+    git checkout v2.0.6
     cd ..
-    patch -p 1 -d hedera-sdk-java < patches/4d880b4c.patch
+    patch -p 1 -d hedera-sdk-java < patches/v2.0.6.patch
 
 As of now (2021/4), the difference is very minimal, almost no java source code is changed, only build.gradle's are modified to ensure jar packaging. But in the future, java source code might be modified to provide convience for interacting with SDK in Python.
 
