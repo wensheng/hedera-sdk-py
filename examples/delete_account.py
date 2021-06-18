@@ -40,6 +40,7 @@ print("account delete transaction executed: ", receipt.toString())
 
 time.sleep(2)
 
+query = AccountInfoQuery().setAccountId(accountId).setQueryPayment(Hbar(1))
 try:
     resp = query.execute(client)
 except Exception as e:
