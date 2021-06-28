@@ -6,13 +6,13 @@ Linux example: **`export JAVA_HOME=/usr/lib/jvm/jdk-11.0.11`**
 
 For Windows, use **'Advanced System Settings', 'Environment Variables...'**.
 
-For most examples, you need to set `OPERATOR_ID` and `OPERATOR_KEY` environment variables.
+For most examples, you need to set `OPERATOR_ID` and `OPERATOR_KEY` environment variables or use a client config file.
 
 On Linux:
 
     export OPERATOR_ID=your_id
     export OPERATOR_KEY=your_private_key
-    
+
 On Windows:
 
     set OPERATOR_ID=your_id
@@ -32,4 +32,5 @@ File related:
     python file_append_chunked.py node_id file_id  # takes 2 minutes
     python get_file_contents.py file_id  # content changed
     python delete_file.py file_id
-    
+
+To subscribe to HCS topics, use `PyConsumer` functional interface. However, it's recommended to use a seperate program.  Please see [hcs-grpc-client](https://github.com/wensheng/hcs-grpc-api-py-client) for using Python gRPC client to subscribe to HCS topic on Hedera mirror nodes without using SDK.

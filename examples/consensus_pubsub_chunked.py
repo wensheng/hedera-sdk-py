@@ -16,9 +16,9 @@ from get_client import client
 clientWithoutOperator = Client.forTestnet()
 submitKey = PrivateKey.generate()
 
-tran = TopicCreateTransaction(
-       ).setTopicMemo("hedera-sdk-py/examples/consensus_pubsub_chunked"
-       ).setSubmitKey(submitKey)
+tran = (TopicCreateTransaction()
+        .setTopicMemo("hedera-sdk-py/examples/consensus_pubsub_chunked")
+        .setSubmitKey(submitKey))
 newTopicId = tran.execute(client).getReceipt(client).topicId
 print("New topic created: ",  newTopicId.toString())
 print("wait 10s to propagate to the mirror ...")
@@ -41,11 +41,11 @@ print("about to prepare a transaction to send a message of ", len(bigContents), 
 # sign with the operator or "sender" of the message
 # this is the party who will be charged the transaction fee
 # MaxChunks was 5, but need 14
-tran = TopicMessageSubmitTransaction(
-       ).setTopicId(newTopicId
-       ).setMessage(bigContents
-       ).setMaxChunks(15
-       ).signWithOperator(client)
+tran = (TopicMessageSubmitTransaction()
+        .setTopicId(newTopicId)
+        .setMessage(bigContents)
+        .setMaxChunks(15)
+        .signWithOperator(client))
 
 # serialize to bytes so we can be signed "somewhere else" by the submit key
 transactionBytes = tran.toBytes()

@@ -22,12 +22,12 @@ accountId = receipt.accountId
 print("account = ",  accountId.toString())
 print("key = ",  key1.getPublicKey().toString())
 
-tran = AccountUpdateTransaction(
-        ).setAccountId(accountId
-        ).setKey(key2.getPublicKey()
-        ).freezeWith(client
-        ).sign(key1
-        ).sign(key2)
+tran = (AccountUpdateTransaction()
+        .setAccountId(accountId)
+        .setKey(key2.getPublicKey())
+        .freezeWith(client)
+        .sign(key1)
+        .sign(key2))
 resp = tran.execute(client)
 print("transaction ID: ", resp.toString())
 

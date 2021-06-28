@@ -34,7 +34,7 @@ Clone this repo:
 
 Patch Java code:
 
-    patch -p 1 -d hedera-sdk-java < patches/4d880b4c.patch
+    patch -p 1 -d hedera-sdk-java < patches/v2.0.6.patch
 
 To insure patching success, check out the java sdk version tag, then apply the patch that matches the tag.  For example:
 

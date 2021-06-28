@@ -25,10 +25,10 @@ client.setMirrorNetwork(mirror_node)
 submitKey = PrivateKey.generate()
 submitPublicKey = submitKey.getPublicKey()
 
-resp = TopicCreateTransaction(
-       ).setTopicMemo("HCS topic with submit key"
-       ).setSubmitKey(submitPublicKey
-       ).execute(client)
+resp = (TopicCreateTransaction()
+        .setTopicMemo("HCS topic with submit key")
+        .setSubmitKey(submitPublicKey)
+        .execute(client))
 
 topicId = resp.getReceipt(client).topicId
 print("Created new topic ", topicId.toString(), " with ED25519 submitKey of ", submitKey.toString())
@@ -43,9 +43,9 @@ def showMsg(*args):
 # subscribeToTopic
 # will not use this: .setStartTime(Instant.ofEpochSecond(0))
 # Instant is org.threeten.bp backport, but hedera sdk already use at least java 8
-query = TopicMessageQuery(
-        ).setTopicId(topicId
-        ).subscribe(client, PyConsumer(showMsg))
+query = (TopicMessageQuery()
+         .setTopicId(topicId)
+         .subscribe(client, PyConsumer(showMsg)))
 
 time.sleep(2)
 
@@ -56,13 +56,13 @@ for i in range(messagesToPublish):
 
     # The transaction is automatically signed by the payer.
     # Due to the topic having a submitKey requirement, additionally sign the transaction with that key.
-    receipt = TopicMessageSubmitTransaction(
-              ).setTopicId(topicId
-              ).setMessage(message
-              ).freezeWith(client
-              ).sign(submitKey
-              ).execute(client
-              ).transactionId.getReceipt(client)
+    receipt = (TopicMessageSubmitTransaction()
+               .setTopicId(topicId)
+               .setMessage(message)
+               .freezeWith(client)
+               .sign(submitKey)
+               .execute(client)
+               .transactionId.getReceipt(client))
 
     time.sleep(secondsBetweenMessages)
 

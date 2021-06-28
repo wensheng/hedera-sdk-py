@@ -18,6 +18,8 @@ topicId = resp.getReceipt(client).topicId
 print("New topic created: ",  topicId.toString())
 time.sleep(5)
 
+# It's recommended to use another seperate program to subscribe to topic
+# please see https://github.com/wensheng/hcs-grpc-api-py-client for using grpc client
 query = TopicMessageQuery().setTopicId(topicId)
 query.subscribe(client, PyConsumer(showMessage))
 
