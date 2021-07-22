@@ -29,7 +29,7 @@ File related:
     python create_file.py
     # a node_id and a file_id will be printed
     python get_file_contents.py id_from_above
-    python file_append_chunked.py node_id file_id  # takes 2 minutes
+    python file_append_chunked.py file_id  # takes 2 minutes
     python get_file_contents.py file_id  # content changed
     python delete_file.py file_id
 

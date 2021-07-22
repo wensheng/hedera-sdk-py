@@ -36,7 +36,7 @@ resp = tran.setAccountId(accountId
           ).sign(pri_key
           ).execute(client)
 receipt = resp.getReceipt(client)
-print("account delete transaction executed: ", receipt.toString())
+print("account delete transaction executed: ", resp.transactionId.toString())
 
 time.sleep(2)
 

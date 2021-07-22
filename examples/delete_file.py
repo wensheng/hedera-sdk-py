@@ -6,7 +6,12 @@ if len(sys.argv) < 2:
     exit("need a file id")
 
 fileId = FileId.fromString(sys.argv[1])
-tran = FileDeleteTransaction()
-resp = tran.setFileId(fileId).execute(client)
-receipt = resp.getReceipt(client)
-print("file deleted successfully")
+try:
+    txn = (FileDeleteTransaction()
+           .setFileId(fileId)
+           .execute(client))
+    receipt = txn.getReceipt(client)
+    print("file deleted successfully.")
+except Exception as e:
+    print(e)
+
