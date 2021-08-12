@@ -1,8 +1,13 @@
 import os
+import json
 from hedera import AccountId, PrivateKey, Client
 
 if "HEDERA_CONFIG_FILE" in os.environ:
     client = Client.fromConfigFile(os.environ["HEDERA_CONFIG_FILE"])
+    OPERATOR_ID = client.operatorAccountId
+    with open(os.environ["HEDERA_CONFIG_FILE"]) as f:
+        OPERATOR_KEY = PrivateKey.fromString(json.load(f)["operator"]["privateKey"])
+
 else:
     if "OPERATOR_ID" not in os.environ or "OPERATOR_KEY" not in os.environ:
         exit("Must set OPERATOR_ID OPERATOR_KEY environment variables")
