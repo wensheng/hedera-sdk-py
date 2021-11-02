@@ -37,11 +37,12 @@ contractId = resp.getReceipt(client).contractId
 print("new contract id: ", contractId.toString())
 
 # 600 < gas fee < 1000
-result = ContractCallQuery(
-         ).setGas(1000
-         ).setContractId(contractId
-         ).setFunction("get_message"
-         ).execute(client)
+result = (ContractCallQuery()
+          .setGas(50000)
+          .setContractId(contractId)
+          .setFunction("get_message")
+          .setQueryPayment(Hbar(1))
+          .execute(client))
 
 if result.errorMessage:
     exit("error calling contract: ", result.errorMessage)
@@ -49,22 +50,25 @@ if result.errorMessage:
 message = result.getString(0)
 print("contract returned message: ", message)
 
-resp = ContractExecuteTransaction(
-       ).setGas(100_000_000
-       ).setContractId(contractId
-       ).setFunction("set_message",
-           ContractFunctionParameters().addString("hello from hedera again!")
-       ).execute(client)
+resp = (ContractExecuteTransaction()
+        .setGas(100_000_000)
+        .setContractId(contractId)
+        .setFunction("set_message",
+                     ContractFunctionParameters().addString("hello from hedera again!")
+                    )
+        .setMaxTransactionFee(Hbar(2))
+        .execute(client))
 
 # if this doesn't throw then we know the contract executed successfully
 receipt = resp.getReceipt(client)
 
 # now query contract
-result = ContractCallQuery(
-         ).setGas(100_000_000
-         ).setContractId(contractId
-         ).setFunction("get_message"
-         ).execute(client)
+result = (ContractCallQuery()
+          .setGas(100_000_000)
+          .setContractId(contractId)
+          .setFunction("get_message")
+          .setQueryPayment(Hbar(1))
+          .execute(client))
 
 if result.errorMessage:
     exit("error calling contract: ", result.errorMessage)
