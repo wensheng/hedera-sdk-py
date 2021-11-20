@@ -51,7 +51,7 @@ message = result.getString(0)
 print("contract returned message: ", message)
 
 resp = (ContractExecuteTransaction()
-        .setGas(100_000_000)
+        .setGas(200_000_000)
         .setContractId(contractId)
         .setFunction("set_message",
                      ContractFunctionParameters().addString("hello from hedera again!")
@@ -64,7 +64,7 @@ receipt = resp.getReceipt(client)
 
 # now query contract
 result = (ContractCallQuery()
-          .setGas(100_000_000)
+          .setGas(50000)
           .setContractId(contractId)
           .setFunction("get_message")
           .setQueryPayment(Hbar(1))
