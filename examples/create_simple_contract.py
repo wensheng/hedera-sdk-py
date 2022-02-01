@@ -26,7 +26,7 @@ fileId = receipt.fileId
 print("contract bytecode file: ", fileId.toString())
 
 tran = (ContractCreateTransaction()
-        .setGas(25000)
+        .setGas(1000000)
         .setBytecodeFileId(fileId)
         .setAdminKey(OPERATOR_KEY)
         .execute(client))
@@ -37,7 +37,7 @@ print(receipt.toString())
 print("new contract id: ", contractId.toString())
 
 query_result = (ContractCallQuery()
-                .setGas(30000)
+                .setGas(300000)
                 .setContractId(contractId)
                 .setFunction("greet")
                 .setQueryPayment(Hbar(1))

@@ -28,7 +28,7 @@ fileId = resp.getReceipt(client).fileId
 print("contract bytecode file: ", fileId.toString())
 
 tran = ContractCreateTransaction()
-resp = tran.setGas(100_000_000
+resp = tran.setGas(500_000
        ).setBytecodeFileId(fileId
        ).setConstructorParameters(
                ContractFunctionParameters().addString("hello from hedera!")
@@ -51,7 +51,7 @@ message = result.getString(0)
 print("contract returned message: ", message)
 
 resp = (ContractExecuteTransaction()
-        .setGas(200_000_000)
+        .setGas(200_000)
         .setContractId(contractId)
         .setFunction("set_message",
                      ContractFunctionParameters().addString("hello from hedera again!")
