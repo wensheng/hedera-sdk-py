@@ -1,0 +1,801 @@
+diff --git a/build.gradle b/build.gradle
+index e1852b178..8cc44bcd4 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -13,8 +13,8 @@ allprojects {
+ 	apply plugin: "java"
+ 	apply plugin: "net.ltgt.errorprone"
+ 
+-	sourceCompatibility = 14
+-	targetCompatibility = 14
++	sourceCompatibility = 11
++	targetCompatibility = 11
+ 
+ 	repositories {
+ 		mavenCentral()
+diff --git a/examples/build.gradle b/examples/build.gradle
+index 597f1583a..b0f3475fd 100644
+--- a/examples/build.gradle
++++ b/examples/build.gradle
+@@ -10,8 +10,8 @@ dependencies {
+ }
+ 
+ java {
+-	sourceCompatibility = org.gradle.api.JavaVersion.VERSION_1_8
+-	targetCompatibility = org.gradle.api.JavaVersion.VERSION_1_8
++	sourceCompatibility = org.gradle.api.JavaVersion.VERSION_11
++	targetCompatibility = org.gradle.api.JavaVersion.VERSION_11
+ }
+ 
+ tasks.addRule("Pattern: run<Example>: Runs an example.") { String taskName ->
+diff --git a/examples/src/main/java/TopicWithAdminKeyExample.java b/examples/src/main/java/TopicWithAdminKeyExample.java
+index 70b2d4cb5..98c344989 100644
+--- a/examples/src/main/java/TopicWithAdminKeyExample.java
++++ b/examples/src/main/java/TopicWithAdminKeyExample.java
+@@ -12,7 +12,7 @@ import com.hedera.hashgraph.sdk.TopicUpdateTransaction;
+ import com.hedera.hashgraph.sdk.Transaction;
+ import com.hedera.hashgraph.sdk.TransactionResponse;
+ import io.github.cdimascio.dotenv.Dotenv;
+-import java8.util.J8Arrays;
++import java.util.Arrays;
+ 
+ import javax.annotation.Nullable;
+ import java.util.Collections;
+@@ -68,7 +68,7 @@ class TopicWithAdminKeyExample {
+         // Generate the initial keys that are part of the adminKey's thresholdKey.
+         // 3 ED25519 keys part of a 2-of-3 threshold key.
+         initialAdminKeys = new PrivateKey[3];
+-        J8Arrays.setAll(initialAdminKeys, i -> PrivateKey.generate());
++        Arrays.setAll(initialAdminKeys, i -> PrivateKey.generate());
+ 
+         KeyList thresholdKey = KeyList.withThreshold(2);
+         Collections.addAll(thresholdKey, initialAdminKeys);
+@@ -79,7 +79,7 @@ class TopicWithAdminKeyExample {
+             .freezeWith(hapiClient);
+ 
+         // Sign the transaction with 2 of 3 keys that are part of the adminKey threshold key.
+-        J8Arrays.stream(initialAdminKeys, 0, 2).forEach(k -> {
++        Arrays.stream(initialAdminKeys, 0, 2).forEach(k -> {
+             System.out.println("Signing ConsensusTopicCreateTransaction with key " + k);
+             transaction.sign(k);
+         });
+@@ -95,7 +95,7 @@ class TopicWithAdminKeyExample {
+         // Generate the new keys that are part of the adminKey's thresholdKey.
+         // 4 ED25519 keys part of a 3-of-4 threshold key.
+         PrivateKey[] newAdminKeys = new PrivateKey[4];
+-        J8Arrays.setAll(newAdminKeys, i -> PrivateKey.generate());
++        Arrays.setAll(newAdminKeys, i -> PrivateKey.generate());
+ 
+         KeyList thresholdKey = KeyList.withThreshold(3);
+         Collections.addAll(thresholdKey, newAdminKeys);
+@@ -107,13 +107,13 @@ class TopicWithAdminKeyExample {
+             .freezeWith(hapiClient);
+ 
+         // Sign with the initial adminKey. 2 of the 3 keys already part of the topic's adminKey.
+-        J8Arrays.stream(initialAdminKeys, 0, 2).forEach(k -> {
++        Arrays.stream(initialAdminKeys, 0, 2).forEach(k -> {
+             System.out.println("Signing ConsensusTopicUpdateTransaction with initial admin key " + k);
+             transaction.sign(k);
+         });
+ 
+         // Sign with the new adminKey. 3 of 4 keys already part of the topic's adminKey.
+-        J8Arrays.stream(newAdminKeys, 0, 3).forEach(k -> {
++        Arrays.stream(newAdminKeys, 0, 3).forEach(k -> {
+             System.out.println("Signing ConsensusTopicUpdateTransaction with new admin key " + k);
+             transaction.sign(k);
+         });
+diff --git a/executable-annotation/build.gradle b/executable-annotation/build.gradle
+index b253af69b..8c86b867a 100644
+--- a/executable-annotation/build.gradle
++++ b/executable-annotation/build.gradle
+@@ -1,2 +1,2 @@
+-sourceCompatibility = 8
+-targetCompatibility = 8
++sourceCompatibility = 11
++targetCompatibility = 11
+diff --git a/executable-processor/src/main/java/com/hedera/hashgraph/sdk/FunctionalExecutableProcessor.java b/executable-processor/src/main/java/com/hedera/hashgraph/sdk/FunctionalExecutableProcessor.java
+index 7004fd474..0b54fa3c7 100644
+--- a/executable-processor/src/main/java/com/hedera/hashgraph/sdk/FunctionalExecutableProcessor.java
++++ b/executable-processor/src/main/java/com/hedera/hashgraph/sdk/FunctionalExecutableProcessor.java
+@@ -5,9 +5,9 @@ import com.squareup.javapoet.JavaFile;
+ import com.squareup.javapoet.ParameterizedTypeName;
+ import com.squareup.javapoet.TypeName;
+ import com.squareup.javapoet.TypeVariableName;
+-import java8.util.concurrent.CompletableFuture;
+-import java8.util.function.BiConsumer;
+-import java8.util.function.Consumer;
++import java.util.concurrent.CompletableFuture;
++import java.util.function.BiConsumer;
++import java.util.function.Consumer;
+ import org.threeten.bp.Duration;
+ 
+ import javax.annotation.processing.AbstractProcessor;
+@@ -29,7 +29,7 @@ import static com.squareup.javapoet.TypeSpec.interfaceBuilder;
+ 
+ @SuppressWarnings({"AndroidJdkLibsChecker", "Java7ApiChecker"})
+ @SupportedAnnotationTypes("com.hedera.hashgraph.sdk.FunctionalExecutable")
+-@SupportedSourceVersion(SourceVersion.RELEASE_8)
++@SupportedSourceVersion(SourceVersion.RELEASE_11)
+ public class FunctionalExecutableProcessor extends AbstractProcessor {
+     @Override
+     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+diff --git a/sdk/build.gradle b/sdk/build.gradle
+index b9c121839..b9abd5c5c 100644
+--- a/sdk/build.gradle
++++ b/sdk/build.gradle
+@@ -43,7 +43,9 @@ dependencies {
+ 	implementation "io.grpc:grpc-core:1.44.1"
+ 	implementation "io.grpc:grpc-protobuf-lite:1.44.1"
+ 	implementation "io.grpc:grpc-stub:1.44.1"
+-
++	implementation "org.slf4j:slf4j-nop:1.7.36"
++	implementation "io.grpc:grpc-netty-shaded:1.44.1"
++ 
+ 	testCompile "org.assertj:assertj-core:3.22.0"
+ 	testImplementation "org.junit.jupiter:junit-jupiter-engine:5.8.2"
+ 	testImplementation "org.junit.jupiter:junit-jupiter-params:5.8.2"
+@@ -102,7 +104,7 @@ tasks.withType(JavaCompile).configureEach {
+ 	compileJava {
+ 		options.compilerArgs += [
+ 			"--release",
+-			"8" // Avoid using Java 12 APIs
++			"11" // Avoid using Java 12 APIs
+ 		]
+ 	}
+ }
+@@ -235,3 +237,16 @@ nexus {
+ 	sign = true
+ 	repositoryUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+ }
++
++task uberJar(type: Jar) {
++    archiveClassifier = 'uber'
++    from sourceSets.main.output
++    dependsOn configurations.runtimeClasspath
++    from {
++        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
++    }{
++        exclude 'META-INF/*.SF'
++        exclude 'META-INF/*.DSA'
++        exclude 'META-INF/*.RSA'
++    }
++}
+diff --git a/sdk/src/main/java/com/hedera/hashgraph/sdk/AccountInfo.java b/sdk/src/main/java/com/hedera/hashgraph/sdk/AccountInfo.java
+index bbe38c80e..b4b5130c7 100644
+--- a/sdk/src/main/java/com/hedera/hashgraph/sdk/AccountInfo.java
++++ b/sdk/src/main/java/com/hedera/hashgraph/sdk/AccountInfo.java
+@@ -3,8 +3,8 @@ package com.hedera.hashgraph.sdk;
+ import com.google.common.base.MoreObjects;
+ import com.google.protobuf.InvalidProtocolBufferException;
+ import com.hedera.hashgraph.sdk.proto.CryptoGetInfoResponse;
+-import java8.util.J8Arrays;
+-import java8.util.stream.Collectors;
++import java.util.Arrays;
++import java.util.stream.Collectors;
+ import org.threeten.bp.Duration;
+ import org.threeten.bp.Instant;
+ 
+@@ -170,7 +170,7 @@ public final class AccountInfo {
+             ? AccountId.fromProtobuf(accountInfo.getProxyAccountID())
+             : null;
+ 
+-        var liveHashes = J8Arrays.stream(accountInfo.getLiveHashesList().toArray())
++        var liveHashes = Arrays.stream(accountInfo.getLiveHashesList().toArray())
+             .map((liveHash) -> LiveHash.fromProtobuf((com.hedera.hashgraph.sdk.proto.LiveHash) liveHash))
+             .collect(Collectors.toList());
+ 
+@@ -230,7 +230,7 @@ public final class AccountInfo {
+     }
+ 
+     CryptoGetInfoResponse.AccountInfo toProtobuf() {
+-        var hashes = J8Arrays.stream(liveHashes.toArray())
++        var hashes = Arrays.stream(liveHashes.toArray())
+             .map((liveHash) -> ((LiveHash) liveHash).toProtobuf())
+             .collect(Collectors.toList());
+ 
+diff --git a/sdk/src/main/java/com/hedera/hashgraph/sdk/AccountInfoQuery.java b/sdk/src/main/java/com/hedera/hashgraph/sdk/AccountInfoQuery.java
+index e23046d3e..70687c6d7 100644
+--- a/sdk/src/main/java/com/hedera/hashgraph/sdk/AccountInfoQuery.java
++++ b/sdk/src/main/java/com/hedera/hashgraph/sdk/AccountInfoQuery.java
+@@ -6,7 +6,7 @@ import com.hedera.hashgraph.sdk.proto.QueryHeader;
+ import com.hedera.hashgraph.sdk.proto.Response;
+ import com.hedera.hashgraph.sdk.proto.ResponseHeader;
+ import io.grpc.MethodDescriptor;
+-import java8.util.concurrent.CompletableFuture;
++import java.util.concurrent.CompletableFuture;
+ 
+ import javax.annotation.Nullable;
+ import java.util.Objects;
+diff --git a/sdk/src/main/java/com/hedera/hashgraph/sdk/ChunkedTransaction.java b/sdk/src/main/java/com/hedera/hashgraph/sdk/ChunkedTransaction.java
+index 6a8d572e1..6eac7b75a 100644
+--- a/sdk/src/main/java/com/hedera/hashgraph/sdk/ChunkedTransaction.java
++++ b/sdk/src/main/java/com/hedera/hashgraph/sdk/ChunkedTransaction.java
+@@ -7,9 +7,9 @@ import com.hedera.hashgraph.sdk.proto.SignatureMap;
+ import com.hedera.hashgraph.sdk.proto.SignedTransaction;
+ import com.hedera.hashgraph.sdk.proto.TransactionBody;
+ import com.hedera.hashgraph.sdk.proto.TransactionID;
+-import java8.util.concurrent.CompletableFuture;
+-import java8.util.concurrent.CompletionStage;
+-import java8.util.function.Function;
++import java.util.concurrent.CompletableFuture;
++import java.util.concurrent.CompletionStage;
++import java.util.function.Function;
+ 
+ import javax.annotation.Nullable;
+ import java.util.ArrayList;
+diff --git a/sdk/src/main/java/com/hedera/hashgraph/sdk/Client.java b/sdk/src/main/java/com/hedera/hashgraph/sdk/Client.java
+index 94a52bd72..f958516be 100644
+--- a/sdk/src/main/java/com/hedera/hashgraph/sdk/Client.java
++++ b/sdk/src/main/java/com/hedera/hashgraph/sdk/Client.java
+@@ -4,10 +4,9 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
+ import com.google.gson.Gson;
+ import com.google.gson.JsonElement;
+ import com.google.gson.JsonParseException;
+-import java8.util.Lists;
+-import java8.util.concurrent.CompletableFuture;
+-import java8.util.function.Consumer;
+-import java8.util.function.Function;
++import java.util.concurrent.CompletableFuture;
++import java.util.function.Consumer;
++import java.util.function.Function;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ import org.threeten.bp.Duration;
+@@ -246,13 +245,13 @@ public final class Client implements AutoCloseable, WithPing, WithPingAll {
+                 String mirror = config.mirrorNetwork.getAsString();
+                 switch (mirror) {
+                     case "mainnet":
+-                        client.setMirrorNetwork(Lists.of("hcs.mainnet.mirrornode.hedera.com:5600"));
++                        client.setMirrorNetwork(List.of("hcs.mainnet.mirrornode.hedera.com:5600"));
+                         break;
+                     case "testnet":
+-                        client.setMirrorNetwork(Lists.of("hcs.testnet.mirrornode.hedera.com:5600"));
++                        client.setMirrorNetwork(List.of("hcs.testnet.mirrornode.hedera.com:5600"));
+                         break;
+                     case "previewnet":
+-                        client.setMirrorNetwork(Lists.of("hcs.previewnet.mirrornode.hedera.com:5600"));
++                        client.setMirrorNetwork(List.of("hcs.previewnet.mirrornode.hedera.com:5600"));
+                         break;
+                     default:
+                         throw new JsonParseException("Illegal argument for mirrorNetwork.");
+diff --git a/sdk/src/main/java/com/hedera/hashgraph/sdk/ContractCallQuery.java b/sdk/src/main/java/com/hedera/hashgraph/sdk/ContractCallQuery.java
+index 90fad20dd..3f0267671 100644
+--- a/sdk/src/main/java/com/hedera/hashgraph/sdk/ContractCallQuery.java
++++ b/sdk/src/main/java/com/hedera/hashgraph/sdk/ContractCallQuery.java
+@@ -7,7 +7,7 @@ import com.hedera.hashgraph.sdk.proto.Response;
+ import com.hedera.hashgraph.sdk.proto.ResponseHeader;
+ import com.hedera.hashgraph.sdk.proto.SmartContractServiceGrpc;
+ import io.grpc.MethodDescriptor;
+-import java8.util.concurrent.CompletableFuture;
++import java.util.concurrent.CompletableFuture;
+ 
+ import javax.annotation.Nullable;
+ import java.util.Objects;
+diff --git a/sdk/src/main/java/com/hedera/hashgraph/sdk/ContractFunctionParameters.java b/sdk/src/main/java/com/hedera/hashgraph/sdk/ContractFunctionParameters.java
+index 6ee0e1ae5..e5d1ea1e5 100644
+--- a/sdk/src/main/java/com/hedera/hashgraph/sdk/ContractFunctionParameters.java
++++ b/sdk/src/main/java/com/hedera/hashgraph/sdk/ContractFunctionParameters.java
+@@ -2,11 +2,10 @@ package com.hedera.hashgraph.sdk;
+ 
+ import com.google.errorprone.annotations.Var;
+ import com.google.protobuf.ByteString;
+-import java8.util.J8Arrays;
+-import java8.util.stream.Collectors;
+-import java8.util.stream.IntStream;
+-import java8.util.stream.IntStreams;
+-import java8.util.stream.Stream;
++import java.util.Arrays;
++import java.util.stream.Collectors;
++import java.util.stream.IntStream;
++import java.util.stream.Stream;
+ import org.bouncycastle.util.encoders.DecoderException;
+ import org.bouncycastle.util.encoders.Hex;
+ 
+@@ -222,7 +221,7 @@ public final class ContractFunctionParameters {
+      * @throws NullPointerException if any value in `strings` is null
+      */
+     public ContractFunctionParameters addStringArray(String[] strings) {
+-        List<ByteString> byteStrings = J8Arrays.stream(strings)
++        List<ByteString> byteStrings = Arrays.stream(strings)
+             .map(ContractFunctionParameters::encodeString)
+             .collect(Collectors.toList());
+ 
+@@ -252,7 +251,7 @@ public final class ContractFunctionParameters {
+      * @return {@code this}
+      */
+     public ContractFunctionParameters addBytesArray(byte[][] param) {
+-        List<ByteString> byteArrays = J8Arrays.stream(param)
++        List<ByteString> byteArrays = Arrays.stream(param)
+             .map(ContractFunctionParameters::encodeBytes)
+             .collect(Collectors.toList());
+ 
+@@ -287,7 +286,7 @@ public final class ContractFunctionParameters {
+      */
+     public ContractFunctionParameters addBytes32Array(byte[][] param) {
+         // array of fixed-size elements
+-        Stream<ByteString> byteArrays = J8Arrays.stream(param)
++        Stream<ByteString> byteArrays = Arrays.stream(param)
+             .map(ContractFunctionParameters::encodeBytes32);
+ 
+         args.add(new Argument("bytes32[]", encodeArray(byteArrays), true));
+@@ -363,7 +362,7 @@ public final class ContractFunctionParameters {
+      * @return {@code this}
+      */
+     public ContractFunctionParameters addInt8Array(byte[] intArray) {
+-        IntStream intStream = IntStreams.range(0, intArray.length).map(idx -> intArray[idx]);
++        IntStream intStream = IntStream.range(0, intArray.length).map(idx -> intArray[idx]);
+ 
+         @Var ByteString arrayBytes = ByteString.copyFrom(
+             intStream.mapToObj(i -> int256(i, 8))
+@@ -384,7 +383,7 @@ public final class ContractFunctionParameters {
+      */
+     public ContractFunctionParameters addInt32Array(int[] intArray) {
+         @Var ByteString arrayBytes = ByteString.copyFrom(
+-            J8Arrays.stream(intArray).mapToObj(i -> int256(i, 32))
++            Arrays.stream(intArray).mapToObj(i -> int256(i, 32))
+                 .collect(Collectors.toList()));
+ 
+         arrayBytes = uint256(intArray.length, 32).concat(arrayBytes);
+@@ -402,7 +401,7 @@ public final class ContractFunctionParameters {
+      */
+     public ContractFunctionParameters addInt64Array(long[] intArray) {
+         @Var ByteString arrayBytes = ByteString.copyFrom(
+-            J8Arrays.stream(intArray).mapToObj(i -> int256(i, 64))
++            Arrays.stream(intArray).mapToObj(i -> int256(i, 64))
+                 .collect(Collectors.toList()));
+ 
+         arrayBytes = uint256(intArray.length, 64).concat(arrayBytes);
+@@ -422,7 +421,7 @@ public final class ContractFunctionParameters {
+      */
+     public ContractFunctionParameters addInt256Array(BigInteger[] intArray) {
+         @Var ByteString arrayBytes = ByteString.copyFrom(
+-            J8Arrays.stream(intArray).map(ContractFunctionParameters::int256)
++            Arrays.stream(intArray).map(ContractFunctionParameters::int256)
+                 .collect(Collectors.toList()));
+ 
+         arrayBytes = uint256(intArray.length, 256).concat(arrayBytes);
+@@ -504,7 +503,7 @@ public final class ContractFunctionParameters {
+      * @return {@code this}
+      */
+     public ContractFunctionParameters addUint8Array(byte[] intArray) {
+-        IntStream intStream = IntStreams.range(0, intArray.length).map(idx -> intArray[idx]);
++        IntStream intStream = IntStream.range(0, intArray.length).map(idx -> intArray[idx]);
+ 
+         @Var ByteString arrayBytes = ByteString.copyFrom(
+             intStream.mapToObj(i -> uint256(i, 8))
+@@ -528,7 +527,7 @@ public final class ContractFunctionParameters {
+      */
+     public ContractFunctionParameters addUint32Array(int[] intArray) {
+         @Var ByteString arrayBytes = ByteString.copyFrom(
+-            J8Arrays.stream(intArray).mapToObj(i -> uint256(i, 32))
++            Arrays.stream(intArray).mapToObj(i -> uint256(i, 32))
+                 .collect(Collectors.toList()));
+ 
+         arrayBytes = uint256(intArray.length, 32).concat(arrayBytes);
+@@ -549,7 +548,7 @@ public final class ContractFunctionParameters {
+      */
+     public ContractFunctionParameters addUint64Array(long[] intArray) {
+         @Var ByteString arrayBytes = ByteString.copyFrom(
+-            J8Arrays.stream(intArray).mapToObj(i -> uint256(i, 64))
++            Arrays.stream(intArray).mapToObj(i -> uint256(i, 64))
+                 .collect(Collectors.toList()));
+ 
+         arrayBytes = uint256(intArray.length, 64).concat(arrayBytes);
+@@ -572,7 +571,7 @@ public final class ContractFunctionParameters {
+      */
+     public ContractFunctionParameters addUint256Array(BigInteger[] intArray) {
+         @Var ByteString arrayBytes = ByteString.copyFrom(
+-            J8Arrays.stream(intArray).map(ContractFunctionParameters::uint256)
++            Arrays.stream(intArray).map(ContractFunctionParameters::uint256)
+                 .collect(Collectors.toList()));
+ 
+         arrayBytes = uint256(intArray.length, 256).concat(arrayBytes);
+@@ -614,7 +613,7 @@ public final class ContractFunctionParameters {
+      */
+     public ContractFunctionParameters addAddressArray(String[] addresses) {
+         ByteString addressArray = encodeArray(
+-            J8Arrays.stream(addresses).map(a -> {
++            Arrays.stream(addresses).map(a -> {
+                 byte[] address = decodeAddress(a);
+                 return leftPad32(ByteString.copyFrom(address));
+             }));
+diff --git a/sdk/src/main/java/com/hedera/hashgraph/sdk/ContractFunctionResult.java b/sdk/src/main/java/com/hedera/hashgraph/sdk/ContractFunctionResult.java
+index e57aaecc1..20dcec2fb 100644
+--- a/sdk/src/main/java/com/hedera/hashgraph/sdk/ContractFunctionResult.java
++++ b/sdk/src/main/java/com/hedera/hashgraph/sdk/ContractFunctionResult.java
+@@ -4,8 +4,8 @@ import com.google.common.base.MoreObjects;
+ import com.google.protobuf.ByteString;
+ import com.google.protobuf.BytesValue;
+ import com.hedera.hashgraph.sdk.proto.ContractFunctionResultOrBuilder;
+-import java8.util.stream.Collectors;
+-import java8.util.stream.StreamSupport;
++import java.util.stream.Collectors;
++import java.util.stream.StreamSupport;
+ import org.bouncycastle.util.encoders.Hex;
+ 
+ import javax.annotation.Nullable;
+@@ -76,9 +76,9 @@ public final class ContractFunctionResult {
+ 
+         gasUsed = inner.getGasUsed();
+ 
+-        logs = StreamSupport.stream(inner.getLogInfoList()).map(ContractLogInfo::fromProtobuf).collect(Collectors.toList());
++        logs = StreamSupport.stream(inner.getLogInfoList().spliterator(), false).map(ContractLogInfo::fromProtobuf).collect(Collectors.toList());
+ 
+-        createdContractIds = StreamSupport.stream(inner.getCreatedContractIDsList()).map(ContractId::fromProtobuf).collect(Collectors.toList());
++        createdContractIds = StreamSupport.stream(inner.getCreatedContractIDsList().spliterator(), false).map(ContractId::fromProtobuf).collect(Collectors.toList());
+ 
+         stateChanges = new ArrayList<>(inner.getStateChangesCount());
+         for (var stateChangeProto : inner.getStateChangesList()) {
+diff --git a/sdk/src/main/java/com/hedera/hashgraph/sdk/ContractInfoQuery.java b/sdk/src/main/java/com/hedera/hashgraph/sdk/ContractInfoQuery.java
+index 8d2c25d17..d9ac17337 100644
+--- a/sdk/src/main/java/com/hedera/hashgraph/sdk/ContractInfoQuery.java
++++ b/sdk/src/main/java/com/hedera/hashgraph/sdk/ContractInfoQuery.java
+@@ -6,7 +6,7 @@ import com.hedera.hashgraph.sdk.proto.Response;
+ import com.hedera.hashgraph.sdk.proto.ResponseHeader;
+ import com.hedera.hashgraph.sdk.proto.SmartContractServiceGrpc;
+ import io.grpc.MethodDescriptor;
+-import java8.util.concurrent.CompletableFuture;
++import java.util.concurrent.CompletableFuture;
+ 
+ import javax.annotation.Nullable;
+ import java.util.Objects;
+diff --git a/sdk/src/main/java/com/hedera/hashgraph/sdk/Delayer.java b/sdk/src/main/java/com/hedera/hashgraph/sdk/Delayer.java
+index 8dba958c3..623e21b72 100644
+--- a/sdk/src/main/java/com/hedera/hashgraph/sdk/Delayer.java
++++ b/sdk/src/main/java/com/hedera/hashgraph/sdk/Delayer.java
+@@ -1,6 +1,6 @@
+ package com.hedera.hashgraph.sdk;
+ 
+-import java8.util.concurrent.CompletableFuture;
++import java.util.concurrent.CompletableFuture;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ import org.threeten.bp.Duration;
+diff --git a/sdk/src/main/java/com/hedera/hashgraph/sdk/EntityIdHelper.java b/sdk/src/main/java/com/hedera/hashgraph/sdk/EntityIdHelper.java
+index b7a4f1820..4fbc63c7c 100644
+--- a/sdk/src/main/java/com/hedera/hashgraph/sdk/EntityIdHelper.java
++++ b/sdk/src/main/java/com/hedera/hashgraph/sdk/EntityIdHelper.java
+@@ -1,7 +1,7 @@
+ package com.hedera.hashgraph.sdk;
+ 
+ import com.google.errorprone.annotations.Var;
+-import java8.lang.FunctionalInterface;
++import java.lang.FunctionalInterface;
+ import org.bouncycastle.util.encoders.DecoderException;
+ import org.bouncycastle.util.encoders.Hex;
+ 
+diff --git a/sdk/src/main/java/com/hedera/hashgraph/sdk/Executable.java b/sdk/src/main/java/com/hedera/hashgraph/sdk/Executable.java
+index 907bf93d9..5f2ef2a0c 100644
+--- a/sdk/src/main/java/com/hedera/hashgraph/sdk/Executable.java
++++ b/sdk/src/main/java/com/hedera/hashgraph/sdk/Executable.java
+@@ -6,7 +6,7 @@ import io.grpc.ClientCall;
+ import io.grpc.MethodDescriptor;
+ import io.grpc.StatusRuntimeException;
+ import io.grpc.stub.ClientCalls;
+-import java8.util.concurrent.CompletableFuture;
++import java.util.concurrent.CompletableFuture;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ import org.threeten.bp.Duration;
+diff --git a/sdk/src/main/java/com/hedera/hashgraph/sdk/FileContentsQuery.java b/sdk/src/main/java/com/hedera/hashgraph/sdk/FileContentsQuery.java
+index a531bf07b..736f9c095 100644
+--- a/sdk/src/main/java/com/hedera/hashgraph/sdk/FileContentsQuery.java
++++ b/sdk/src/main/java/com/hedera/hashgraph/sdk/FileContentsQuery.java
+@@ -7,7 +7,7 @@ import com.hedera.hashgraph.sdk.proto.QueryHeader;
+ import com.hedera.hashgraph.sdk.proto.Response;
+ import com.hedera.hashgraph.sdk.proto.ResponseHeader;
+ import io.grpc.MethodDescriptor;
+-import java8.util.concurrent.CompletableFuture;
++import java.util.concurrent.CompletableFuture;
+ 
+ import javax.annotation.Nullable;
+ import java.util.Objects;
+diff --git a/sdk/src/main/java/com/hedera/hashgraph/sdk/FileInfoQuery.java b/sdk/src/main/java/com/hedera/hashgraph/sdk/FileInfoQuery.java
+index 52b4f6f73..4b0ef1571 100644
+--- a/sdk/src/main/java/com/hedera/hashgraph/sdk/FileInfoQuery.java
++++ b/sdk/src/main/java/com/hedera/hashgraph/sdk/FileInfoQuery.java
+@@ -6,7 +6,7 @@ import com.hedera.hashgraph.sdk.proto.QueryHeader;
+ import com.hedera.hashgraph.sdk.proto.Response;
+ import com.hedera.hashgraph.sdk.proto.ResponseHeader;
+ import io.grpc.MethodDescriptor;
+-import java8.util.concurrent.CompletableFuture;
++import java.util.concurrent.CompletableFuture;
+ 
+ import javax.annotation.Nullable;
+ import java.util.Objects;
+diff --git a/sdk/src/main/java/com/hedera/hashgraph/sdk/FutureConverter.java b/sdk/src/main/java/com/hedera/hashgraph/sdk/FutureConverter.java
+index b38414da1..77209cbcb 100644
+--- a/sdk/src/main/java/com/hedera/hashgraph/sdk/FutureConverter.java
++++ b/sdk/src/main/java/com/hedera/hashgraph/sdk/FutureConverter.java
+@@ -4,8 +4,8 @@ import com.google.common.util.concurrent.FutureCallback;
+ import com.google.common.util.concurrent.Futures;
+ import com.google.common.util.concurrent.ListenableFuture;
+ import com.google.common.util.concurrent.MoreExecutors;
+-import java8.util.concurrent.CompletableFuture;
+-import java8.util.function.Consumer;
++import java.util.concurrent.CompletableFuture;
++import java.util.function.Consumer;
+ 
+ import java.util.concurrent.ExecutionException;
+ import java.util.concurrent.Executor;
+diff --git a/sdk/src/main/java/com/hedera/hashgraph/sdk/Keystore.java b/sdk/src/main/java/com/hedera/hashgraph/sdk/Keystore.java
+index 819c11df4..9999342c3 100644
+--- a/sdk/src/main/java/com/hedera/hashgraph/sdk/Keystore.java
++++ b/sdk/src/main/java/com/hedera/hashgraph/sdk/Keystore.java
+@@ -6,7 +6,7 @@ import com.google.gson.JsonObject;
+ import com.google.gson.JsonParser;
+ import com.google.gson.JsonSyntaxException;
+ import com.google.gson.stream.JsonWriter;
+-import java8.util.Optional;
++import java.util.Optional;
+ import org.bouncycastle.crypto.params.KeyParameter;
+ import org.bouncycastle.util.encoders.Hex;
+ 
+diff --git a/sdk/src/main/java/com/hedera/hashgraph/sdk/ManagedNode.java b/sdk/src/main/java/com/hedera/hashgraph/sdk/ManagedNode.java
+index b5a24bc34..c71337dee 100644
+--- a/sdk/src/main/java/com/hedera/hashgraph/sdk/ManagedNode.java
++++ b/sdk/src/main/java/com/hedera/hashgraph/sdk/ManagedNode.java
+@@ -8,11 +8,11 @@ import io.grpc.ManagedChannel;
+ import io.grpc.ManagedChannelBuilder;
+ import io.grpc.TlsChannelCredentials;
+ import io.grpc.inprocess.InProcessChannelBuilder;
+-import java8.util.Objects;
++import java.util.Objects;
+ import org.threeten.bp.Duration;
+ 
+ import javax.annotation.Nullable;
+-import java8.util.concurrent.CompletableFuture;
++import java.util.concurrent.CompletableFuture;
+ 
+ import java.util.concurrent.ExecutorService;
+ import java.util.concurrent.TimeUnit;
+diff --git a/sdk/src/main/java/com/hedera/hashgraph/sdk/MirrorNetwork.java b/sdk/src/main/java/com/hedera/hashgraph/sdk/MirrorNetwork.java
+index 79b7fbd6c..7a0ac95f4 100644
+--- a/sdk/src/main/java/com/hedera/hashgraph/sdk/MirrorNetwork.java
++++ b/sdk/src/main/java/com/hedera/hashgraph/sdk/MirrorNetwork.java
+@@ -1,7 +1,5 @@
+ package com.hedera.hashgraph.sdk;
+ 
+-import java8.util.Lists;
+-
+ import java.util.ArrayList;
+ import java.util.HashMap;
+ import java.util.List;
+@@ -25,15 +23,15 @@ class MirrorNetwork extends ManagedNetwork<MirrorNetwork, ManagedNodeAddress, Mi
+     }
+ 
+     static MirrorNetwork forMainnet(ExecutorService executor) {
+-        return new MirrorNetwork(executor, Lists.of("hcs.mainnet.mirrornode.hedera.com:5600"));
++        return new MirrorNetwork(executor, List.of("hcs.mainnet.mirrornode.hedera.com:5600"));
+     }
+ 
+     static MirrorNetwork forTestnet(ExecutorService executor) {
+-        return new MirrorNetwork(executor, Lists.of("hcs.testnet.mirrornode.hedera.com:5600"));
++        return new MirrorNetwork(executor, List.of("hcs.testnet.mirrornode.hedera.com:5600"));
+     }
+ 
+     static MirrorNetwork forPreviewnet(ExecutorService executor) {
+-        return new MirrorNetwork(executor, Lists.of("hcs.previewnet.mirrornode.hedera.com:5600"));
++        return new MirrorNetwork(executor, List.of("hcs.previewnet.mirrornode.hedera.com:5600"));
+     }
+ 
+     synchronized MirrorNetwork setNetwork(List<String> network) throws TimeoutException, InterruptedException {
+diff --git a/sdk/src/main/java/com/hedera/hashgraph/sdk/Query.java b/sdk/src/main/java/com/hedera/hashgraph/sdk/Query.java
+index c8f0833a7..cf61fb9ea 100644
+--- a/sdk/src/main/java/com/hedera/hashgraph/sdk/Query.java
++++ b/sdk/src/main/java/com/hedera/hashgraph/sdk/Query.java
+@@ -9,8 +9,8 @@ import com.hedera.hashgraph.sdk.proto.ResponseType;
+ import com.hedera.hashgraph.sdk.proto.Transaction;
+ import com.hedera.hashgraph.sdk.proto.TransactionBody;
+ import io.grpc.MethodDescriptor;
+-import java8.util.concurrent.CompletableFuture;
+-import java8.util.function.Consumer;
++import java.util.concurrent.CompletableFuture;
++import java.util.function.Consumer;
+ import org.threeten.bp.Instant;
+ 
+ import javax.annotation.Nullable;
+diff --git a/sdk/src/main/java/com/hedera/hashgraph/sdk/ScheduleInfoQuery.java b/sdk/src/main/java/com/hedera/hashgraph/sdk/ScheduleInfoQuery.java
+index 11008b8ac..120415d8b 100644
+--- a/sdk/src/main/java/com/hedera/hashgraph/sdk/ScheduleInfoQuery.java
++++ b/sdk/src/main/java/com/hedera/hashgraph/sdk/ScheduleInfoQuery.java
+@@ -7,7 +7,7 @@ import com.hedera.hashgraph.sdk.proto.ResponseHeader;
+ import com.hedera.hashgraph.sdk.proto.ScheduleGetInfoQuery;
+ import com.hedera.hashgraph.sdk.proto.ScheduleServiceGrpc;
+ import io.grpc.MethodDescriptor;
+-import java8.util.concurrent.CompletableFuture;
++import java.util.concurrent.CompletableFuture;
+ 
+ import javax.annotation.Nullable;
+ import java.util.Objects;
+diff --git a/sdk/src/main/java/com/hedera/hashgraph/sdk/SystemDeleteTransaction.java b/sdk/src/main/java/com/hedera/hashgraph/sdk/SystemDeleteTransaction.java
+index e4ae96092..d1e669650 100644
+--- a/sdk/src/main/java/com/hedera/hashgraph/sdk/SystemDeleteTransaction.java
++++ b/sdk/src/main/java/com/hedera/hashgraph/sdk/SystemDeleteTransaction.java
+@@ -8,7 +8,7 @@ import com.hedera.hashgraph.sdk.proto.SystemDeleteTransactionBody;
+ import com.hedera.hashgraph.sdk.proto.TransactionBody;
+ import com.hedera.hashgraph.sdk.proto.TransactionResponse;
+ import io.grpc.MethodDescriptor;
+-import java8.util.concurrent.CompletableFuture;
++import java.util.concurrent.CompletableFuture;
+ import org.threeten.bp.Instant;
+ 
+ import javax.annotation.Nullable;
+diff --git a/sdk/src/main/java/com/hedera/hashgraph/sdk/SystemUndeleteTransaction.java b/sdk/src/main/java/com/hedera/hashgraph/sdk/SystemUndeleteTransaction.java
+index 4ec508f56..fa067c32c 100644
+--- a/sdk/src/main/java/com/hedera/hashgraph/sdk/SystemUndeleteTransaction.java
++++ b/sdk/src/main/java/com/hedera/hashgraph/sdk/SystemUndeleteTransaction.java
+@@ -8,7 +8,7 @@ import com.hedera.hashgraph.sdk.proto.SystemUndeleteTransactionBody;
+ import com.hedera.hashgraph.sdk.proto.TransactionBody;
+ import com.hedera.hashgraph.sdk.proto.TransactionResponse;
+ import io.grpc.MethodDescriptor;
+-import java8.util.concurrent.CompletableFuture;
++import java.util.concurrent.CompletableFuture;
+ 
+ import javax.annotation.Nullable;
+ import java.util.LinkedHashMap;
+diff --git a/sdk/src/main/java/com/hedera/hashgraph/sdk/TokenInfoQuery.java b/sdk/src/main/java/com/hedera/hashgraph/sdk/TokenInfoQuery.java
+index c16b4a139..849a62470 100644
+--- a/sdk/src/main/java/com/hedera/hashgraph/sdk/TokenInfoQuery.java
++++ b/sdk/src/main/java/com/hedera/hashgraph/sdk/TokenInfoQuery.java
+@@ -7,7 +7,7 @@ import com.hedera.hashgraph.sdk.proto.ResponseHeader;
+ import com.hedera.hashgraph.sdk.proto.TokenGetInfoQuery;
+ import com.hedera.hashgraph.sdk.proto.TokenServiceGrpc;
+ import io.grpc.MethodDescriptor;
+-import java8.util.concurrent.CompletableFuture;
++import java.util.concurrent.CompletableFuture;
+ 
+ import javax.annotation.Nullable;
+ import java.util.Objects;
+diff --git a/sdk/src/main/java/com/hedera/hashgraph/sdk/TokenNftInfoQuery.java b/sdk/src/main/java/com/hedera/hashgraph/sdk/TokenNftInfoQuery.java
+index 49d1c9489..cb564d9c4 100644
+--- a/sdk/src/main/java/com/hedera/hashgraph/sdk/TokenNftInfoQuery.java
++++ b/sdk/src/main/java/com/hedera/hashgraph/sdk/TokenNftInfoQuery.java
+@@ -7,7 +7,7 @@ import com.hedera.hashgraph.sdk.proto.ResponseHeader;
+ import com.hedera.hashgraph.sdk.proto.TokenGetNftInfoQuery;
+ import com.hedera.hashgraph.sdk.proto.TokenServiceGrpc;
+ import io.grpc.MethodDescriptor;
+-import java8.util.concurrent.CompletableFuture;
++import java.util.concurrent.CompletableFuture;
+ 
+ import javax.annotation.Nonnegative;
+ import javax.annotation.Nullable;
+diff --git a/sdk/src/main/java/com/hedera/hashgraph/sdk/TopicMessageQuery.java b/sdk/src/main/java/com/hedera/hashgraph/sdk/TopicMessageQuery.java
+index b2ea36164..f93307f9e 100644
+--- a/sdk/src/main/java/com/hedera/hashgraph/sdk/TopicMessageQuery.java
++++ b/sdk/src/main/java/com/hedera/hashgraph/sdk/TopicMessageQuery.java
+@@ -12,9 +12,9 @@ import io.grpc.Status;
+ import io.grpc.StatusRuntimeException;
+ import io.grpc.stub.ClientCalls;
+ import io.grpc.stub.StreamObserver;
+-import java8.util.function.BiConsumer;
+-import java8.util.function.Consumer;
+-import java8.util.function.Predicate;
++import java.util.function.BiConsumer;
++import java.util.function.Consumer;
++import java.util.function.Predicate;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ import org.threeten.bp.Duration;
+diff --git a/sdk/src/main/java/com/hedera/hashgraph/sdk/Transaction.java b/sdk/src/main/java/com/hedera/hashgraph/sdk/Transaction.java
+index a446e91a4..4518dc44f 100644
+--- a/sdk/src/main/java/com/hedera/hashgraph/sdk/Transaction.java
++++ b/sdk/src/main/java/com/hedera/hashgraph/sdk/Transaction.java
+@@ -10,8 +10,8 @@ import com.hedera.hashgraph.sdk.proto.SignedTransaction;
+ import com.hedera.hashgraph.sdk.proto.TransactionBody;
+ import com.hedera.hashgraph.sdk.proto.TransactionID;
+ import com.hedera.hashgraph.sdk.proto.TransactionList;
+-import java8.util.concurrent.CompletableFuture;
+-import java8.util.function.Function;
++import java.util.concurrent.CompletableFuture;
++import java.util.function.Function;
+ import org.bouncycastle.crypto.digests.SHA384Digest;
+ import org.threeten.bp.Duration;
+ 
+diff --git a/sdk/src/main/java/com/hedera/hashgraph/sdk/TransactionId.java b/sdk/src/main/java/com/hedera/hashgraph/sdk/TransactionId.java
+index bcb3fa9c3..ddd70027f 100644
+--- a/sdk/src/main/java/com/hedera/hashgraph/sdk/TransactionId.java
++++ b/sdk/src/main/java/com/hedera/hashgraph/sdk/TransactionId.java
+@@ -3,7 +3,7 @@ package com.hedera.hashgraph.sdk;
+ import com.google.errorprone.annotations.Var;
+ import com.google.protobuf.InvalidProtocolBufferException;
+ import com.hedera.hashgraph.sdk.proto.TransactionID;
+-import java8.util.concurrent.CompletableFuture;
++import java.util.concurrent.CompletableFuture;
+ import org.threeten.bp.Clock;
+ import org.threeten.bp.Instant;
+ 
+@@ -13,8 +13,8 @@ import java.util.Collections;
+ import java.util.Objects;
+ import java.util.concurrent.TimeoutException;
+ 
+-import static java8.util.concurrent.CompletableFuture.completedFuture;
+-import static java8.util.concurrent.CompletableFuture.failedFuture;
++import static java.util.concurrent.CompletableFuture.completedFuture;
++import static java.util.concurrent.CompletableFuture.failedFuture;
+ 
+ /**
+  * The client-generated ID for a transaction.
+diff --git a/sdk/src/main/java/com/hedera/hashgraph/sdk/TransactionResponse.java b/sdk/src/main/java/com/hedera/hashgraph/sdk/TransactionResponse.java
+index 643e8f954..d1c296cff 100644
+--- a/sdk/src/main/java/com/hedera/hashgraph/sdk/TransactionResponse.java
++++ b/sdk/src/main/java/com/hedera/hashgraph/sdk/TransactionResponse.java
+@@ -1,7 +1,7 @@
+ package com.hedera.hashgraph.sdk;
+ 
+ import com.google.common.base.MoreObjects;
+-import java8.util.concurrent.CompletableFuture;
++import java.util.concurrent.CompletableFuture;
+ import org.bouncycastle.util.encoders.Hex;
+ 
+ import javax.annotation.Nullable;
+diff --git a/sdk/src/test/java/com/hedera/hashgraph/sdk/ContractFunctionParametersTest.java b/sdk/src/test/java/com/hedera/hashgraph/sdk/ContractFunctionParametersTest.java
+index 37f7c5b97..d8a68b768 100644
+--- a/sdk/src/test/java/com/hedera/hashgraph/sdk/ContractFunctionParametersTest.java
++++ b/sdk/src/test/java/com/hedera/hashgraph/sdk/ContractFunctionParametersTest.java
+@@ -1,7 +1,6 @@
+ package com.hedera.hashgraph.sdk;
+ 
+ import com.google.protobuf.ByteString;
+-import java8.util.Lists;
+ import org.bouncycastle.util.encoders.Hex;
+ import org.junit.jupiter.api.DisplayName;
+ import org.junit.jupiter.api.Test;
+@@ -19,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
+ public class ContractFunctionParametersTest {
+     @SuppressWarnings("unused")
+     private static List<Arguments> int256Arguments() {
+-        return Lists.of(
++        return List.of(
+             Arguments.of(0, "0000000000000000000000000000000000000000000000000000000000000000"),
+             Arguments.of(2, "0000000000000000000000000000000000000000000000000000000000000002"),
+             Arguments.of(255, "00000000000000000000000000000000000000000000000000000000000000ff"),
+@@ -40,7 +39,7 @@ public class ContractFunctionParametersTest {
+ 
+     @SuppressWarnings("unused")
+     private static List<Arguments> uInt256Arguments() {
+-        return Lists.of(
++        return List.of(
+             Arguments.of(0, "0000000000000000000000000000000000000000000000000000000000000000", 8),
+             Arguments.of(2, "0000000000000000000000000000000000000000000000000000000000000002", 8),
+             Arguments.of(255, "00000000000000000000000000000000000000000000000000000000000000ff", 8),
+diff --git a/sdk/src/test/java/com/hedera/hashgraph/sdk/Ed25519PrivateKeyTest.java b/sdk/src/test/java/com/hedera/hashgraph/sdk/Ed25519PrivateKeyTest.java
+index 908eb6392..745486a17 100644
+--- a/sdk/src/test/java/com/hedera/hashgraph/sdk/Ed25519PrivateKeyTest.java
++++ b/sdk/src/test/java/com/hedera/hashgraph/sdk/Ed25519PrivateKeyTest.java
+@@ -3,8 +3,8 @@ package com.hedera.hashgraph.sdk;
+ //import com.hedera.hashgraph.sdk.BadKeyException;
+ //import com.hedera.hashgraph.sdk.Mnemonic;
+ 
+-import java8.util.stream.RefStreams;
+-import java8.util.stream.Stream;
++import java.util.stream.RefStreams;
++import java.util.stream.Stream;
+ import org.bouncycastle.math.ec.rfc8032.Ed25519;
+ import org.bouncycastle.util.encoders.Hex;
+ import org.junit.jupiter.api.DisplayName;
+diff --git a/sdk/src/test/java/com/hedera/hashgraph/sdk/HbarTest.java b/sdk/src/test/java/com/hedera/hashgraph/sdk/HbarTest.java
+index 71aa8c252..ee6650528 100644
+--- a/sdk/src/test/java/com/hedera/hashgraph/sdk/HbarTest.java
++++ b/sdk/src/test/java/com/hedera/hashgraph/sdk/HbarTest.java
+@@ -1,6 +1,6 @@
+ package com.hedera.hashgraph.sdk;
+ 
+-import java8.util.stream.RefStreams;
++import java.util.stream.RefStreams;
+ import org.junit.jupiter.api.Test;
+ import org.junit.jupiter.params.ParameterizedTest;
+ import org.junit.jupiter.params.provider.Arguments;
+diff --git a/sdk/src/test/java/com/hedera/hashgraph/sdk/TopicMessageQueryTest.java b/sdk/src/test/java/com/hedera/hashgraph/sdk/TopicMessageQueryTest.java
+index ca1ff1fe7..d7c3c293b 100644
+--- a/sdk/src/test/java/com/hedera/hashgraph/sdk/TopicMessageQueryTest.java
++++ b/sdk/src/test/java/com/hedera/hashgraph/sdk/TopicMessageQueryTest.java
+@@ -18,7 +18,7 @@ import io.grpc.Status;
+ import io.grpc.StatusRuntimeException;
+ import io.grpc.inprocess.InProcessServerBuilder;
+ import io.grpc.stub.StreamObserver;
+-import java8.util.function.Consumer;
++import java.util.function.Consumer;
+ import org.apache.commons.lang3.ArrayUtils;
+ import org.assertj.core.api.InstanceOfAssertFactories;
+ import org.junit.AfterClass;

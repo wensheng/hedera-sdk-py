@@ -21,13 +21,6 @@ if len(sys.argv) < 3:
 accountId = AccountId.fromString(sys.argv[1])
 pri_key = PrivateKey.fromString(sys.argv[2])
 
-query = AccountInfoQuery().setAccountId(accountId).setQueryPayment(Hbar(1))
-try:
-    resp = query.execute(client)
-    print("account info before delete: ", resp.toString())
-except Exception as e:
-    exit("Failed: {}".format(e))
-
 tran = AccountDeleteTransaction()
 resp = tran.setAccountId(accountId
           ).setTransferAccountId(OPERATOR_ID
