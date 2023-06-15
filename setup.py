@@ -30,7 +30,7 @@ setuptools.setup(
     ],
     package_dir={"": "src"},
     packages=setuptools.find_packages(where="src"),
-    install_requires=['pyjnius>=1.3.0'],
+    install_requires=['pyjnius>=1.5.0'],
     python_requires=">=3.6",
     include_package_data=True,
     package_data={ "hedera": ["*.jar"]},
