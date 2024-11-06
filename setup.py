@@ -12,7 +12,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="hedera",
+    name="hedera-sdk-py",
     version=version,
     author="Wensheng Wang",
     author_email="wenshengwang@gmail.com",
