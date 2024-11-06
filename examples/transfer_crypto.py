@@ -1,10 +1,7 @@
-import os
 import time
 from hedera import (
     Hbar,
     AccountId,
-    PrivateKey,
-    Client,
     AccountBalanceQuery,
     TransferTransaction,
     )

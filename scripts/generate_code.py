@@ -34,14 +34,19 @@ shutil.copy2(jar_file, new_jar_file)
 
 fw = open(os.path.join(base_dir, "src", "hedera", "generated.py"), 'w')
 fw.write("""import os
+from dataclasses import dataclass
 here = os.path.abspath(os.path.dirname(__file__))
 os.environ['CLASSPATH'] = os.path.join(here, "%s")
 from jnius import autoclass, PythonJavaClass, java_method
 
 JString = autoclass("java.lang.String")
 JStandardCharsets = autoclass("java.nio.charset.StandardCharsets")
+JInstant = autoclass("java.time.Instant")
+JDuration = autoclass("java.time.Duration")
 
 """ % jar_name)
+
+names_to_export = ["JString", "JStandardCharsets", "JInstant", "JDuration", "PyConsumer", "MirrorResponse"]
 
 with ZipFile(jar_file) as zf:
     namelist = [a for a in zf.namelist() if 
@@ -52,15 +57,23 @@ with ZipFile(jar_file) as zf:
 
     # for i in tqdm(namelist):
     for i in namelist:
-        classname = i[:-6].replace("/",".")
+        java_classname = i[:-6].replace("/",".")
         # with Popen(["javap", "-classpath", jar_file, "-public", classname], stdout=PIPE) as proc:
         #    output = proc.stdout.readlines()
         #    if 'abstract class' not in output[1].decode() and not '$' in classname:
         #        fw.write("{} = autoclass('{}')\n".format(classname[25:], classname))
-        if not '$' in classname:
-            fw.write("{} = autoclass('{}')\n".format(classname[25:], classname))
+        if not '$' in java_classname:
+            autoclass_name = java_classname[java_classname.rindex(".") + 1:]
+            fw.write("{} = autoclass('{}')\n".format(autoclass_name, java_classname))
+            names_to_export.append(autoclass_name)
 
 fw.write("""
+
+@dataclass(frozen=True)
+class MirrorResponse:
+    timestamp: str
+    sequence_number: float
+    contents: str
 
 class PyConsumer(PythonJavaClass):
     __javainterfaces__ = ['java/util/function/Consumer']
@@ -69,10 +82,16 @@ class PyConsumer(PythonJavaClass):
         self.fn = fn
 
     @java_method('(Ljava/lang/Object;)V')
-    def accept(self, msg):
-        ts = msg.consensusTimestamp.toString()
-        sn = msg.sequenceNumber
+    def accept(self, msg) -> MirrorResponse:
+        timestamp = msg.consensusTimestamp.toString()
+        sequence_number = msg.sequenceNumber
         contents = JString(msg.contents, JStandardCharsets.UTF_8).toString()
-        self.fn(ts, sn, contents)
+        self.fn(MirrorResponse(timestamp, sequence_number, contents))
+
+
 """)
+
+formatted_exports = ',\n'.join(f'\t"{classname}"' for classname in names_to_export)
+fw.write("__all__ = [\n{}\n]".format(formatted_exports))
+
 fw.close()
