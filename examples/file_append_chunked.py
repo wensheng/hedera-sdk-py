@@ -2,13 +2,11 @@ import os
 import sys
 from hedera import (
     Hbar,
-    AccountId,
     FileId,
     FileAppendTransaction,
     FileInfoQuery,
     )
 from get_client import client
-from jnius import autoclass
 
 if len(sys.argv) < 2:
     exit("need fileId")

@@ -2,7 +2,7 @@ import os
 import setuptools
 
 src_files = os.listdir("src/hedera")
-jar_file = [a for a in src_files if a.startswith("sdk-") and a.endswith("-uber.jar")]
+jar_file = [a for a in src_files if a.startswith("sdk-") and a.endswith(".jar")]
 if not jar_file:
     exit("jar file must exist before packaging")
 jar_file = jar_file[0]
@@ -12,7 +12,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="hedera-sdk-py", # Replace with your own username
+    name="hedera-sdk-py",
     version=version,
     author="Wensheng Wang",
     author_email="wenshengwang@gmail.com",

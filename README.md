@@ -5,8 +5,27 @@ This is basically a python wrapper of [Hedera SDK in Java](https://github.com/ha
 
 ## Install
 
-    pip install hedera-sdk-py
+```sh
+pip install hedera-sdk-py
+```
 
+## How to build
+- Make sure to install Hedera Java SDK Git submodule
+- Build Hedera Java SDK JAR
+  - Go to Java SDK directory and apply most recent patch:
+  ```sh
+  cd ./hedera-sdk-java
+  git apply ../patches/v2.43.0.patch
+  ```
+  - Build JAR
+  ```sh
+  ./gradlew assemble
+  ```
+- Go back to root and run code generation script:
+  ```sh
+  cd ..
+  python ./scripts/generate_code.py
+  ```
 
 ## How to Use
 ```python

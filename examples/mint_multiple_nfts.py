@@ -1,22 +1,10 @@
 import sys
-import time
 from hedera import (
-    Hbar,
-    PrivateKey,
-    AccountCreateTransaction,
-    AccountDeleteTransaction,
-    TransferTransaction,
-    TokenCreateTransaction,
-    TokenAssociateTransaction,
-    TokenGrantKycTransaction,
-    TokenWipeTransaction,
     TokenMintTransaction,
-    TokenDeleteTransaction,
     TokenId,
-    TokenType,
     )
 from jnius import autoclass
-from get_client import client, OPERATOR_ID, OPERATOR_KEY
+from get_client import client
 
 ArrayList = autoclass("java.util.ArrayList")
 

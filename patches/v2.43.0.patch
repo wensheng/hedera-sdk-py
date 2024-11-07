@@ -1,0 +1,36 @@
+Subject: [PATCH] 2.41.0
+---
+Index: sdk/build.gradle.kts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/sdk/build.gradle.kts b/sdk/build.gradle.kts
+--- a/sdk/build.gradle.kts	(revision f5c4b316e5b6aa4beb084fa2b55dc5ef98770828)
++++ b/sdk/build.gradle.kts	(date 1728584642204)
+@@ -22,6 +22,11 @@
+     id("com.hedera.gradle.sdk")
+ }
+ 
++dependencies {
++    api("io.grpc:grpc-netty-shaded:1.64.0")
++    api("org.slf4j:slf4j-nop")
++}
++
+ // Define dependency constraints for gRPC implementations so that clients automatically get the correct version
+ dependencies.constraints {
+     api("io.grpc:grpc-netty:1.64.0")
+@@ -48,3 +53,13 @@
+     runtimeOnly("io.grpc.netty.shaded")
+     runtimeOnly("org.slf4j.simple")
+ }
++
++tasks.jar {
++    val dependencies = configurations
++        .runtimeClasspath
++        .get()
++        .map(::zipTree)
++    from(dependencies)
++    duplicatesStrategy = DuplicatesStrategy.INCLUDE
++    exclude("META-INF/*.RSA", "META-INF/*.SF", "META-INF/*.DSA")
++}

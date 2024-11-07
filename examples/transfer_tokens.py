@@ -1,4 +1,3 @@
-import time
 from hedera import (
     Hbar,
     PrivateKey,
