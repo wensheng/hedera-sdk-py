@@ -11,6 +11,9 @@ ArrayList = autoclass("java.util.ArrayList")
 tokenId = TokenId.fromString(sys.argv[1])
 amount = int(sys.argv[2])
 
+if amount > 10:
+    exit("Can not mint more than 10 nft's")
+
 #meta = ArrayList()
 #for i in range(amount):
 #    meta.add(f'https://example.com/token/metadata/{i}'.encode())

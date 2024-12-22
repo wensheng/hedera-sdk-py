@@ -15,7 +15,7 @@ pip install hedera-sdk-py
   - Go to Java SDK directory and apply most recent patch:
   ```sh
   cd ./hedera-sdk-java
-  git apply ../patches/v2.43.0.patch
+  git apply ../patches/v2.46.0.patch
   ```
   - Build JAR
   ```sh
