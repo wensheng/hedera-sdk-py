@@ -37,7 +37,9 @@ time.sleep(5)
 
 
 def showMsg(*args):
-    print("time: {} received topic message: {}".format(args[0], args[2]))
+    # print("time: {} received topic message: {}".format(args[0], args[2]))
+    msg = args[0]
+    print("time: {} received topic message: {}".format(msg.timestamp, msg.contents))
 
 
 # subscribeToTopic

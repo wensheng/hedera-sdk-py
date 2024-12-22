@@ -27,7 +27,9 @@ time.sleep(10)
 query = TopicMessageQuery().setTopicId(newTopicId)
 
 def show_msg(*args):
-    print("time:", args[0], "seq#:", args[1], "content:", args[2])
+    print(len(args))
+    msg = args[0]
+    print("time:", msg.timestamp, "seq#:", msg.sequence_number, "content:", msg.contents)
 
 
 query.subscribe(client, PyConsumer(show_msg))

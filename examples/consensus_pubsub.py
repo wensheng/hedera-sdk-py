@@ -10,7 +10,9 @@ from get_client import client
 
 
 def showMessage(*args):
-    print("time: {} received: {}".format(args[0], args[2]))
+    # print("time: {} received: {}".format(args[0], args[2]))
+    msg = args[0]
+    print("time: {} received: {}".format(msg.timestamp, msg.contents))
 
 
 resp = TopicCreateTransaction().execute(client)
