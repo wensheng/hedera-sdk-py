@@ -6,7 +6,7 @@ jar_file = [a for a in src_files if a.startswith("sdk-") and a.endswith(".jar")]
 if not jar_file:
     exit("jar file must exist before packaging")
 jar_file = jar_file[0]
-version = jar_file[4:-9]
+version = jar_file[4:-4]
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
@@ -30,8 +30,8 @@ setuptools.setup(
     ],
     package_dir={"": "src"},
     packages=setuptools.find_packages(where="src"),
-    install_requires=['pyjnius>=1.5.0'],
-    python_requires=">=3.6",
+    install_requires=['pyjnius>=1.6.1'],
+    python_requires=">=3.8",
     include_package_data=True,
     package_data={ "hedera": ["*.jar"]},
 )

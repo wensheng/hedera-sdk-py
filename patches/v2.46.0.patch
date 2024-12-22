@@ -1,0 +1,38 @@
+diff --git a/sdk/build.gradle.kts b/sdk/build.gradle.kts
+index 1c6229fcc..a667fc9c8 100644
+--- a/sdk/build.gradle.kts
++++ b/sdk/build.gradle.kts
+@@ -22,10 +22,18 @@ plugins {
+     id("com.hedera.gradle.sdk")
+ }
+ 
++dependencies {
++    api("io.grpc:grpc-core:1.64.0")
++    api("io.grpc:grpc-inprocess:1.64.0")
++    api("io.grpc:grpc-protobuf-lite:1.64.0")
++    api("io.grpc:grpc-stub:1.64.0")
++    api("io.grpc:grpc-netty-shaded:1.64.0")
++    api("org.slf4j:slf4j-nop:2.0.16")
++}
++
+ // Define dependency constraints for gRPC implementations so that clients automatically get the correct version
+ dependencies.constraints {
+     api("io.grpc:grpc-netty:1.64.0")
+-    api("io.grpc:grpc-netty-shaded:1.64.0")
+     api("io.grpc:grpc-okhttp:1.64.0")
+ }
+ 
+@@ -46,3 +54,13 @@ testIntegrationModuleInfo {
+     runtimeOnly("io.grpc.netty.shaded")
+     runtimeOnly("org.slf4j.simple")
+ }
++
++tasks.jar {
++    val dependencies = configurations
++        .runtimeClasspath
++        .get()
++        .map(::zipTree)
++    from(dependencies)
++    duplicatesStrategy = DuplicatesStrategy.INCLUDE
++    exclude("META-INF/*.RSA", "META-INF/*.SF", "META-INF/*.DSA")
++}
