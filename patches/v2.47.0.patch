@@ -1,0 +1,36 @@
+diff --git a/sdk/build.gradle.kts b/sdk/build.gradle.kts
+index 46085f34c..4e211182a 100644
+--- a/sdk/build.gradle.kts
++++ b/sdk/build.gradle.kts
+@@ -19,6 +19,17 @@ dependencies {
+     publishDependencyConstraint("io.grpc:grpc-netty")
+     publishDependencyConstraint("io.grpc:grpc-netty-shaded")
+     publishDependencyConstraint("io.grpc:grpc-okhttp")
++    implementation("org.slf4j:slf4j-nop:2.0.16")
++    implementation("io.grpc:grpc-netty-shaded:1.70.0") {
++        exclude(group = "org.codehaus.mojo", module = "animal-sniffer-annotations")
++    }
++}
++
++extraJavaModuleInfo {
++    automaticModule(
++        "org.codehaus.mojo:animal-sniffer-annotations",
++        "animal.sniffer.annotations"
++    )
+ }
+ 
+ testModuleInfo {
+@@ -86,3 +97,13 @@ tasks.register<Exec>("updateProto") {
+     executable = File(rootDir, "scripts/update_protobufs.py").absolutePath
+     args("main") // argument is the branch/tag
+ }
++
++tasks.jar {
++    val dependencies = configurations
++        .runtimeClasspath
++        .get()
++        .map(::zipTree)
++    from(dependencies)
++    duplicatesStrategy = DuplicatesStrategy.INCLUDE
++    exclude("META-INF/*.RSA", "META-INF/*.SF", "META-INF/*.DSA")
++}

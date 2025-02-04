@@ -13,10 +13,10 @@ from zipfile import ZipFile
 #     exit("This script relies on `javap` but it's not found")
 
 base_dir = os.path.realpath(os.path.join(os.path.dirname(__file__), ".."))
-java_sdk_dir = os.path.join(base_dir, "hedera-sdk-java")
+java_sdk_dir = os.path.join(base_dir, "hiero-sdk-java")
 
 if not os.path.isdir(java_sdk_dir):
-    exit("hedera-sdk-java does not exist, did you forget to checkout submodule?")
+    exit("hiero-sdk-java does not exist, did you forget to checkout submodule?")
 
 jar_dir = os.path.join(java_sdk_dir, "sdk", "build", "libs")
 
@@ -28,25 +28,27 @@ if len(jarfiles) == 0:
     exit("no jar exist, build the jar first")
 
 jar_name = next(reversed(sorted(jarfiles)))
+version = jar_name[4:-4]
 jar_file = os.path.join(jar_dir, jar_name)
 new_jar_file = os.path.join(base_dir, "src", "hedera", jar_name)
 shutil.copy2(jar_file, new_jar_file)
 
 fw = open(os.path.join(base_dir, "src", "hedera", "generated.py"), 'w')
-fw.write("""import os
+fw.write(f"""import os
 from dataclasses import dataclass
 here = os.path.abspath(os.path.dirname(__file__))
-os.environ['CLASSPATH'] = os.path.join(here, "%s")
+os.environ['CLASSPATH'] = os.path.join(here, "{jar_name}")
 from jnius import autoclass, PythonJavaClass, java_method
 
+__version__ = "{version}"
 JString = autoclass("java.lang.String")
 JStandardCharsets = autoclass("java.nio.charset.StandardCharsets")
 JInstant = autoclass("java.time.Instant")
 JDuration = autoclass("java.time.Duration")
 
-""" % jar_name)
+""")
 
-names_to_export = ["JString", "JStandardCharsets", "JInstant", "JDuration", "PyConsumer", "MirrorResponse"]
+names_to_export = ["__version__", "JString", "JStandardCharsets", "JInstant", "JDuration", "PyConsumer", "MirrorResponse"]
 
 with ZipFile(jar_file) as zf:
     namelist = [a for a in zf.namelist() if 

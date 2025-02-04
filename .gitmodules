@@ -1,4 +1,3 @@
-[submodule "hedera-sdk-java"]
-	path = hedera-sdk-java
-	url = https://github.com/hashgraph/hedera-sdk-java.git
-	branch = main
+[submodule "hiero-sdk-java"]
+	path = hiero-sdk-java
+	url = https://github.com/hiero-ledger/hiero-sdk-java.git
