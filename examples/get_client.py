@@ -1,6 +1,9 @@
 import os
 import json
+from dotenv import load_dotenv
 from hedera import AccountId, PrivateKey, Client
+
+load_dotenv()
 
 if "HEDERA_CONFIG_FILE" in os.environ:
     client = Client.fromConfigFile(os.environ["HEDERA_CONFIG_FILE"])

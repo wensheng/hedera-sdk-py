@@ -1,24 +1,10 @@
 # hedera-sdk-py examples
 
-As hedera-sdk-py use Java SDK underneath, you need to set your JAVA_HOME to jre/jdk >=11.
+As hedera-sdk-py use Java SDK underneath, you must have Java Runtime or JDK installed.
 
-Linux example: **`export JAVA_HOME=/usr/lib/jvm/jdk-11.0.11`**
+Copy `.env.sample` to `.env` and enter your own java location, id and private key.
 
-For Windows, use **'Advanced System Settings', 'Environment Variables...'**.
-
-For most examples, you need to set `OPERATOR_ID` and `OPERATOR_KEY` environment variables or use a client config file.
-
-On Linux:
-
-    export OPERATOR_ID=your_id
-    export OPERATOR_KEY=your_private_key
-
-On Windows:
-
-    set OPERATOR_ID=your_id
-    set OPERATOR_KEY=your_private_key
-
-They are used in get_client.py, which was imported into most examples.  If you use network other than testnet, set `HEDERA_NETWORK` environment variable.  
+If you use a network other than testnet, set `HEDERA_NETWORK` environment variable to either 'mainnet' or 'previewnet'.  
 
 Alternatively you can use a config json file.  2 examples are provided: client-config.json and client-config-with-operator.json.  See `client_from_file.py` for an example of using config file instead of using environment variables.
 
